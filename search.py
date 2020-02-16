@@ -1,11 +1,11 @@
 # This file will use the Tweepy Cursor API to reply to mentions, follow users that follow us, and a backup like and retweet
 # imports tweepy, time, and the create_api function from config.py
+import time
 from typing import List
 
 import tweepy
-import time
-from config import create_api
 
+from config import create_api
 
 # Define a follow_followers function that accepts api and check if they are not followed, then follow them
 # Todo: Is user id string or integer? Use set
@@ -13,7 +13,9 @@ followed_users_ids: List[str] = []
 
 
 def follow_followers(api):
-    """Follow all followers."""
+    """Follow all followers.
+
+    """
     for follower in tweepy.Cursor(api.followers).items():
         if not follower.following:
             follower.follow()
@@ -23,7 +25,9 @@ def follow_followers(api):
 
 # Todo: Rename to unfollow_non_followers?
 def unfollow(api):
-    """Unfollow if a followed user is no longer following."""
+    """Unfollow if a followed user is no longer following.
+
+    """
     for user_id in followed_users_ids:
         try:
             if not api.exists_friendship(source_screen_name='@ZtmBot',
@@ -56,11 +60,11 @@ def check_mentions(api, keywords, since_id):
 
 # Define a fav_retweet function that accepts api, create terms string to search for and use the tweepy.Cursor object to search those terms 100 times
 def fav_retweet(api):
-    '''
+    """
     This function search for tweets in the with a search criteria
     and automatic like the tweet if the tweet has not been liked and
     retweet the tweet if the tweet has not been retweeted
-    '''
+    """
     search = ["#ZTM", "#Zerotomastery", "#ztm", "zerotomastery",
               "ZeroToMastery", "Andrei Neagoie", "Yihua Zhang", "Daniel Bourke"]
     for tweet in tweepy.Cursor(api.search, search).items(25):
