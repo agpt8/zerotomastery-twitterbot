@@ -11,6 +11,7 @@ class Stream_Listener(tweepy.StreamListener):
     """
 
     def __init__(self, api):
+        super().__init__(api)
         self.api = api
         self.me = api.me()
 
