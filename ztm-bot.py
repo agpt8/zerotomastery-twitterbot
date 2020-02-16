@@ -38,9 +38,10 @@ class Stream_Listener(tweepy.StreamListener):
 
     def on_error(self, status_code):
         """When encountering an error while listening to the stream, return False if `status_code` is 420 and print
-        the error.
+        the error. If `status_code == 429` then sleep for 900 milliseconds else print whatever the error and status
+        code received.
 
-        :param status_code:
+        :param status_code: status code returned by the API when encountering an error
         :return: False when `status_code` is 420 to disconnect the stream.
         """
         if status_code == 420:
@@ -60,8 +61,7 @@ def main(follow, keyword):
     my_stream_listener = Stream_Listener(api)
     my_stream = tweepy.Stream(auth=api.auth, listener=my_stream_listener)
 
-    # , is_async=True, languages=["en"]
-    my_stream.filter(track=keyword, follow=follow)
+    my_stream.filter(track=keyword, follow=follow)  # can add `is_async=True, languages=["en"]` to the filter
 
 
 if __name__ == '__main__':
