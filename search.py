@@ -41,11 +41,10 @@ def unfollow_non_followers(api):
             time.sleep(900)
 
 
-# Define a check_mentions function that accepts api, keywords, and since_id, follow and reply to the user if user has mentioned us
-def check_mentions(api, keywords, since_id):
+# Define a reply_to_mentions function that accepts api, keywords, and since_id, follow and reply to the user if user has mentioned us
+def reply_to_mentions(api, keywords, since_id):
     new_since_id = since_id
-    for tweet in tweepy.Cursor(api.mentions_timeline,
-                               since_id=since_id).items():
+    for tweet in tweepy.Cursor(api.mentions_timeline, since_id=since_id).items():
         new_since_id = max(tweet.id, new_since_id)
         try:
             if tweet.in_reply_to_status_id is not None:
