@@ -30,8 +30,7 @@ def unfollow_non_followers(api):
     """
     for user_id in followed_users_ids:
         try:
-            if not api.exists_friendship(source_screen_name='@ZtmBot',
-                                         target_id=user_id):
+            if not api.exists_friendship(source_screen_name='@ZtmBot', target_id=user_id):
                 api.destroy_friendship(id=user_id)
                 time.sleep(10)
                 followed_users_ids.remove(user_id)
@@ -44,17 +43,15 @@ def unfollow_non_followers(api):
 # Define a reply_to_mentions function that accepts api, keywords, and since_id, follow and reply to the user if user has mentioned us
 def reply_to_mentions(api, keywords, since_id):
     new_since_id = since_id
-    for tweet in tweepy.Cursor(api.mentions_timeline, since_id=since_id).items():
+    for tweet in tweepy.Cursor(api.mentions_timeline, since_id).items():
         new_since_id = max(tweet.id, new_since_id)
         try:
             if tweet.in_reply_to_status_id is not None:
                 # Tweet is a reply
                 break
             elif any(keyword in tweet.text for keyword in keywords):
-                status = '@' + tweet.user.screen_name + \
-                         ' Zero To Mastery, ZTMBot to the rescue! zerotomastery.io/'
-                api.update_status(
-                    status=status, in_reply_to_status_id=tweet.id_str)
+                status = '@' + tweet.user.screen_name + ' Zero To Mastery, ZTMBot to the rescue! zerotomastery.io/'
+                api.update_status(status=status, in_reply_to_status_id=tweet.id_str)
                 print('replied to', tweet.user.screen_name)
                 time.sleep(900)
             else:
@@ -97,7 +94,6 @@ def main():
         unfollow_non_followers(api)
         reply_since_id = reply_to_mentions(api, follow_keywords, reply_since_id)
         fav_retweet(api, fav_keywords)
-        # fav_retweet(api)
         time.sleep(60)
 
 
