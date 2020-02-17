@@ -24,7 +24,7 @@ def follow_followers(api):
 
 
 # Todo: Rename to unfollow_non_followers?
-def unfollow(api):
+def unfollow_non_followers(api):
     """Unfollow if a followed user is no longer following.
 
     """
@@ -96,7 +96,7 @@ def main():
     while True:
         since_id = check_mentions(api, keywords, since_id)
         follow_followers(api)
-        unfollow(api)
+        unfollow_non_followers(api)
         # fav_retweet(api)
         time.sleep(60)
 
