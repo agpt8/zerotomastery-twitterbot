@@ -66,15 +66,13 @@ def check_mentions(api, keywords, since_id):
 
 
 # Define a fav_retweet function that accepts api, create terms string to search for and use the tweepy.Cursor object to search those terms 100 times
-def fav_retweet(api):
+def fav_retweet(api, keywords):
     """
     This function search for tweets in the with a search criteria
     and automatic like the tweet if the tweet has not been liked and
     retweet the tweet if the tweet has not been retweeted
     """
-    search = ["#ZTM", "#Zerotomastery", "#ztm", "zerotomastery",
-              "ZeroToMastery", "Andrei Neagoie", "Yihua Zhang", "Daniel Bourke"]
-    for tweet in tweepy.Cursor(api.search, search).items(25):
+    for tweet in tweepy.Cursor(api.search, keywords).items(25):
         try:
             if not tweet.favorite():
                 tweet.favorite()
@@ -82,8 +80,8 @@ def fav_retweet(api):
             if not tweet.retweet():
                 tweet.retweet()
                 print('Retweeted the tweet')
-        except tweepy.TweepError as e:
-            print(e.reason)
+        except tweepy.TweepError as error:
+            print(error.reason)
         except StopIteration:
             break
 
@@ -91,12 +89,15 @@ def fav_retweet(api):
 # Define a main function to connect to the api and create a since_id counter, call all above functions
 def main():
     api = create_api()
-    since_id = 1
-    keywords = ["ZtmBot", "ztmBot", "@ZtmBot"]
+    reply_since_id = 1
+    follow_keywords = ["ZtmBot", "ztmBot", "@ZtmBot"]
+    fav_keywords = ["#ZTM", "#Zerotomastery", "#ztm", "zerotomastery",
+                    "ZeroToMastery", "Andrei Neagoie", "Yihua Zhang", "Daniel Bourke"]
     while True:
-        since_id = check_mentions(api, keywords, since_id)
         follow_followers(api)
         unfollow_non_followers(api)
+        reply_since_id = reply_to_mentions(api, follow_keywords, reply_since_id)
+        fav_retweet(api, fav_keywords)
         # fav_retweet(api)
         time.sleep(60)
 
